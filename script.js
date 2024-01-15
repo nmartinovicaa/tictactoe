@@ -19,8 +19,12 @@ const gameBoard = (function() {
         }
     }
 
+    let flatten = function() {
+        return !board.flat(Infinity).includes(null)
+    }
 
-    return {render,place, clearBoard, validPos}
+
+    return {render,place, clearBoard, validPos, flatten,board}
 })();
 
 function player() {
@@ -78,9 +82,11 @@ function player() {
         return false
     }
 
+    let checkTie = function() {
+        return gameBoard.flatten()
+    }
 
-
-    return {displayName,displaySymbol,createPlayer,placeSymbol, checkWinner}
+    return {displayName,displaySymbol,createPlayer,placeSymbol, checkWinner, checkTie}
 }
 
 
@@ -93,7 +99,7 @@ const game = function() {
     let currentPlayer = player1;
     let gameWon = false;
 
-    while (!gameWon)
+    while (!gameWon && !currentPlayer.checkTie())
     {
         currentPlayer.placeSymbol()
 
@@ -112,7 +118,11 @@ const game = function() {
         gameBoard.render()
     }
 
-    console.log(`${currentPlayer.displayName()} is the winner`)
+    if (gameWon) {
+        console.log(`${currentPlayer.displayName()} is the winner`)
+    } else {
+        console.log('the game is a tie')
+    }
 
 
 
